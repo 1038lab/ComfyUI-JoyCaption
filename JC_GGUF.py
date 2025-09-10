@@ -12,7 +12,6 @@ import sys
 import gc
 import os
 from huggingface_hub import hf_hub_download
-from JC import JC_ExtraOptions
 
 os.environ['TRANSFORMERS_VERBOSITY'] = 'error'
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
