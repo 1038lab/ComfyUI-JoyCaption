@@ -1,6 +1,6 @@
 # ComfyUI-JoyCaption Update Log
 
-## V2.0.1 (2025-01-27)
+## V2.0.1 (2025-10-20)
 
 ### 🐛 Bug Fixes
 - **Fixed Module Loading Issues**: Resolved "ModuleNotFoundError: No module named 'JC'" by implementing sorted file loading in `__init__.py`
@@ -157,6 +157,7 @@ https://github.com/1038lab/ComfyUI-JoyCaption/blob/main/example_workflows/JoyCap
   - UTF-8 encoding support
 
   - Batch processing capability
+
 
 
 
