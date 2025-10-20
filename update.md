@@ -1,5 +1,29 @@
 # ComfyUI-JoyCaption Update Log
 
+## V2.0.1 (2025-01-27)
+
+### 🐛 Bug Fixes
+- **Fixed Module Loading Issues**: Resolved "ModuleNotFoundError: No module named 'JC'" by implementing sorted file loading in `__init__.py`
+- **Fixed CUDA Memory Issues**: Improved error handling for CUDA memory allocation failures
+
+### 🔧 Code Improvements
+- **Inline Utility Functions**: Moved error handling and utility functions back into main modules to avoid import conflicts
+- **Enhanced Error Handling**: Better error messages and resource cleanup for model loading failures
+- **Improved Memory Management**: More robust GPU memory cleanup and error recovery
+
+### 🎨 User Experience
+- **Added Progress Feedback**: Console output now shows processing status for GGUF models
+- **Enhanced Processing Mode**: Added "Auto" option to processing_mode (Auto/GPU/CPU) for better hardware detection
+- **Better Tooltips**: Improved parameter descriptions and user guidance
+
+### 📝 Documentation
+- **Fixed Installation Guide**: Corrected path error in Chinese installation guide (`llama_cpp_install_zh.md`)
+- **Updated Model Path Instructions**: Added clearer guidance for model placement in README
+
+### 🛠️ Technical Changes
+- **Configuration Centralization**: Added `gguf_settings` to `jc_data.json` for better configuration management
+- **Stabilized Module Loading**: Implemented deterministic file loading order to prevent import race conditions
+
 ## V2.0.0 (2025-08-22)
  ![Joycaption GGUF](example_workflows/JoyCaption-GGUF.png)
 https://github.com/1038lab/ComfyUI-JoyCaption/blob/main/example_workflows/JoyCaption-GGUF.json
@@ -133,5 +157,6 @@ https://github.com/1038lab/ComfyUI-JoyCaption/blob/main/example_workflows/JoyCap
   - UTF-8 encoding support
 
   - Batch processing capability
+
 
 
