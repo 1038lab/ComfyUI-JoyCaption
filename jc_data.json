@@ -241,13 +241,21 @@
             "default": false
         }
     },
+    "gguf_settings": {
+        "mmproj_filename": "llama-joycaption-beta-one-llava-mmproj-model-f16.gguf",
+        "default_image_size": [336, 336]
+    },
     "hf_models": {
+        "joycaption-beta-one-fp8": {
+            "name": "JKCHSTR/llama-joycaption-alpha-two-hf-llava-FP8-Dynamic",
+            "description": "JoyCaption Beta One - FP8 Dynamic Quantization of llama-joycaption-beta-one"
+        },
         "joycaption-beta-one": {
-            "name": "fancyfeast/llama-joycaption-beta-one-hf-llava",
+            "name": "1038lab/llama-joycaption-beta-one",
             "description": "JoyCaption Beta One - Latest version with improved performance and quality"
         },
         "joycaption-alpha-two": {
-            "name": "fancyfeast/llama-joycaption-alpha-two-hf-llava",
+            "name": "1038lab/llama-joycaption-alpha-two",
             "description": "JoyCaption Alpha Two - Previous version, still available for compatibility"
         }
     },

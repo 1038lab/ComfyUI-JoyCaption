@@ -12,7 +12,24 @@ import sys
 import gc
 import os
 from huggingface_hub import hf_hub_download
-from JC import JC_ExtraOptions
+
+class ModelLoadError(Exception):
+    pass
+
+def suppress_output(func):
+    import sys
+    import io
+    def wrapper(*args, **kwargs):
+        old_stdout = sys.stdout
+        old_stderr = sys.stderr
+        try:
+            sys.stdout = io.StringIO()
+            sys.stderr = io.StringIO()
+            return func(*args, **kwargs)
+        finally:
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
+    return wrapper
 
 os.environ['TRANSFORMERS_VERBOSITY'] = 'error'
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
@@ -33,6 +50,7 @@ with open(Path(__file__).parent / "jc_data.json", "r", encoding="utf-8") as f:
     MODEL_SETTINGS = config["model_settings"]
     CAPTION_LENGTH_CHOICES = config["caption_length_choices"]
     GGUF_MODELS = config["gguf_models"]
+    GGUF_SETTINGS = config["gguf_settings"]
 
 _MODEL_CACHE = {}
 
@@ -70,7 +88,7 @@ class JC_GGUF_Models:
                     local_dir_use_symlinks=False
                 )).resolve()
             
-            mmproj_filename = "llama-joycaption-beta-one-llava-mmproj-model-f16.gguf"
+            mmproj_filename = GGUF_SETTINGS["mmproj_filename"]
             mmproj_path = llm_models_dir / mmproj_filename
             if not mmproj_path.exists():
                 mmproj_path = Path(hf_hub_download(
@@ -83,43 +101,39 @@ class JC_GGUF_Models:
             n_ctx = MODEL_SETTINGS["context_window"]
             n_batch = 2048
             n_threads = max(4, MODEL_SETTINGS["cpu_threads"])
-            n_gpu_layers = -1 if processing_mode == "GPU" else 0
+            if processing_mode == "Auto":
+                n_gpu_layers = -1 if torch.cuda.is_available() else 0
+            elif processing_mode == "GPU":
+                n_gpu_layers = -1
+            else:  # CPU
+                n_gpu_layers = 0
             
-            import sys
-            import io
-
-            old_stdout = sys.stdout
-            old_stderr = sys.stderr
-
-            try:
-                sys.stdout = io.StringIO()
-                sys.stderr = io.StringIO()
-
-                self.model = Llama(
-                    model_path=str(local_path),
-                    n_ctx=n_ctx,
-                    n_batch=n_batch,
-                    n_threads=n_threads,
-                    n_gpu_layers=n_gpu_layers,
-                    verbose=False,
-                    chat_handler=Llava15ChatHandler(clip_model_path=str(mmproj_path)),
-                    offload_kqv=True,
-                    numa=True
-                )
-
-            finally:
-                sys.stdout = old_stdout
-                sys.stderr = old_stderr
+            self.model = self._initialize_model(local_path, mmproj_path, n_ctx, n_batch, n_threads, n_gpu_layers)
             
         except Exception as e:
-            raise RuntimeError(f"Model initialization failed: {str(e)}")
+            raise ModelLoadError(f"Model initialization failed: {str(e)}")
+    
+    @suppress_output
+    def _initialize_model(self, local_path, mmproj_path, n_ctx, n_batch, n_threads, n_gpu_layers):
+        """Initialize the GGUF model with suppressed output"""
+        return Llama(
+            model_path=str(local_path),
+            n_ctx=n_ctx,
+            n_batch=n_batch,
+            n_threads=n_threads,
+            n_gpu_layers=n_gpu_layers,
+            verbose=False,
+            chat_handler=Llava15ChatHandler(clip_model_path=str(mmproj_path)),
+            offload_kqv=True,
+            numa=True
+        )
     
     def generate(self, image: Image.Image, system: str, prompt: str, max_new_tokens: int, temperature: float, top_p: float, top_k: int) -> str:
         try:
             if image.mode != 'RGB':
                 image = image.convert('RGB')
             
-            image = image.resize((336, 336), Image.Resampling.BILINEAR)
+            image = image.resize(GGUF_SETTINGS["default_image_size"], Image.Resampling.BILINEAR)
             
             import io
             import base64
@@ -156,21 +170,7 @@ class JC_GGUF_Models:
             if top_k > 0:
                 completion_params["top_k"] = top_k
 
-            import sys
-            import io
-
-            old_stdout = sys.stdout
-            old_stderr = sys.stderr
-
-            try:
-                sys.stdout = io.StringIO()
-                sys.stderr = io.StringIO()
-
-                response = self.model.create_chat_completion(**completion_params)
-
-            finally:
-                sys.stdout = old_stdout
-                sys.stderr = old_stderr
+            response = self._create_completion(completion_params)
             
             del messages
             
@@ -180,6 +180,11 @@ class JC_GGUF_Models:
             return f"Generation error: {str(e)}"
         finally:
             gc.collect()
+    
+    @suppress_output
+    def _create_completion(self, completion_params):
+        """Create chat completion with suppressed output"""
+        return self.model.create_chat_completion(**completion_params)
 
 class JC_GGUF:
     @classmethod
@@ -189,7 +194,7 @@ class JC_GGUF:
             "required": {
                 "image": ("IMAGE",),
                 "model": (model_list, {"default": model_list[0], "tooltip": "Select the GGUF model to use for caption generation"}),
-                "processing_mode": (["GPU", "CPU"], {"default": "GPU", "tooltip": "GPU: Faster but requires more VRAM\nCPU: Slower but saves VRAM"}),
+                "processing_mode": (["Auto", "GPU", "CPU"], {"default": "Auto", "tooltip": "Auto: Automatically detect best mode\nGPU: Faster but requires more VRAM\nCPU: Slower but saves VRAM"}),
                 "prompt_style": (list(CAPTION_TYPE_MAP.keys()), {"default": "Descriptive", "tooltip": "Select the style of caption you want to generate"}),
                 "caption_length": (CAPTION_LENGTH_CHOICES, {"default": "any", "tooltip": "Control the length of the generated caption"}),
                 "memory_management": (["Keep in Memory", "Clear After Run", "Global Cache"], {"default": "Keep in Memory", "tooltip": "Choose how to manage model memory. 'Keep in Memory' for faster processing, 'Clear After Run' for limited VRAM, 'Global Cache' for fastest processing if you have enough VRAM"}),
@@ -211,6 +216,7 @@ class JC_GGUF:
     
     def generate(self, image, model, processing_mode, prompt_style, caption_length, memory_management, extra_options=None):
         try:
+            print(f"JoyCaption GGUF: Processing image with {model} ({processing_mode} mode)")
             cache_key = f"{model}_{processing_mode}"
             
             if memory_management == "Global Cache":
@@ -238,6 +244,7 @@ class JC_GGUF:
 
             prompt_text = build_prompt(prompt_style, caption_length, extra_options[0] if extra_options else [], extra_options[1] if extra_options else "{NAME}")
 
+            print("JoyCaption GGUF: Generating caption...")
             with torch.inference_mode():
                 pil_image = ToPILImage()(image[0].permute(2, 0, 1))
                 response = self.predictor.generate(
@@ -249,6 +256,7 @@ class JC_GGUF:
                     top_p=MODEL_SETTINGS["default_top_p"],
                     top_k=MODEL_SETTINGS["default_top_k"],
                 )
+            print("JoyCaption GGUF: Caption generation completed")
 
             if memory_management == "Clear After Run":
                 del self.predictor
@@ -273,7 +281,7 @@ class JC_GGUF_adv:
             "required": {
                 "image": ("IMAGE",),
                 "model": (model_list, {"default": model_list[0], "tooltip": "Select the GGUF model to use for caption generation"}),
-                "processing_mode": (["GPU", "CPU"], {"default": "GPU", "tooltip": "GPU: Faster but requires more VRAM\nCPU: Slower but saves VRAM"}),
+                "processing_mode": (["Auto", "GPU", "CPU"], {"default": "Auto", "tooltip": "Auto: Automatically detect best mode\nGPU: Faster but requires more VRAM\nCPU: Slower but saves VRAM"}),
                 "prompt_style": (list(CAPTION_TYPE_MAP.keys()), {"default": "Descriptive", "tooltip": "Select the style of caption you want to generate"}),
                 "caption_length": (CAPTION_LENGTH_CHOICES, {"default": "any", "tooltip": "Control the length of the generated caption"}),
                 "max_new_tokens": ("INT", {"default": MODEL_SETTINGS["default_max_tokens"], "min": 1, "max": 2048, "tooltip": "Maximum number of tokens to generate. Higher values allow longer captions"}),
