@@ -6,7 +6,7 @@
 
 ### **1. 打开 ComfyUI 的命令提示符**
 
-* 进入 `.\ComfyUI\python_embedded\python_embeded`
+* 进入 `C:\ComfyUI_windows_portable\python_embeded`
 * 在地址栏中输入 `cmd` 并按回车键。
 
 ---
@@ -23,12 +23,12 @@
 ## **自动安装脚本（推荐）**
 
 * 确保安装脚本保存在这里：  
-  `.\ComfyUI\custom_nodes\ComfyUI-JoyCaption\llama_cpp_install.py`
+  `.\ComfyUI\custom_nodes\ComfyUI-JoyCaption\llama_cpp_install\llama_cpp_install.py`
 
 * 在命令提示符中（在步骤 1 中打开的），运行脚本：
 
   ```bash
-  .\comfyui\python_embeded\python.exe llama_cpp_install.py
+  .\python_embeded\python.exe llama_cpp_install.py
   ```
 
 脚本将执行以下操作：
@@ -76,8 +76,4 @@
 * 重启 ComfyUI。
 * 硬刷新网页浏览器（`Ctrl+F5` 或 `Cmd+Shift+R`）。
 
-
 --- 
-
-
-
