@@ -4,7 +4,7 @@
 
 ### 🧩 **New Feature: Custom Model Support**
 
-- Added `custom_models.json` system — users can now add their own models without modifying the core repository.
+- Added `custom_models.json` system — users can now add their own models without modifying the core repository. [#19](https://github.com/1038lab/ComfyUI-JoyCaption/issues/19)
 - Supports both **Hugging Face** (`hf_models`) and **GGUF** (`gguf_models`) formats.
 - Fully optional — if the file is missing or empty, JoyCaption continues as normal.
 - Safe and mergeable — your custom definitions are loaded dynamically at runtime.
