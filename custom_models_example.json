@@ -1,0 +1,29 @@
+{
+  "hf_models": {
+    "__comment__": "For HuggingFace-format models (handled by JC.py). Each key appears in the dropdown list.",
+
+    "My-LLaVA-Model": {
+      "name": "myusername/llava-custom-model",
+      "description": "Example custom Hugging Face model with image captioning capability (LLaVA-based)."
+    },
+
+    "My-Phi-Vision": {
+      "name": "myusername/phi-vision-captioner",
+      "description": "Optional: a different HF model supporting visual-language tasks."
+    }
+  },
+
+  "gguf_models": {
+    "__comment__": "For GGUF-format models (handled by JC_GGUF.py). Each key appears in the GGUF model dropdown.",
+
+    "My-GGUF-Caption-Model": {
+      "name": "myusername/llava-custom-gguf-model/model.gguf",
+      "description": "Example GGUF model file from Hugging Face (must include correct mmproj if needed)."
+    },
+
+    "My-Gemma-GGUF": {
+      "name": "mlabonne/gemma-3-27b-it-abliterated-GGUF",
+      "description": "Example: large GGUF model known to work well with JoyCaption."
+    }
+  }
+}
