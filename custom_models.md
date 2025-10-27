@@ -1,11 +1,11 @@
 # 🧩 JoyCaption Custom Models Guide
-**Version added:** v2.0.2 · **Last updated:** 2025-10-27  
+**Version added:** v2.1.0 · **Last updated:** 2025-10-27  
 Supports both **HF** and **GGUF** model customization.
 
 ---
 
 ## 💡 Overview
-Starting from **JoyCaption v2.0.2**, users can register **their own models** —  
+Starting from **JoyCaption v2.1.0**, users can register **their own models** —  
 without modifying any of the repository’s internal configuration files.
 
 This makes it easy to:
