@@ -1,5 +1,16 @@
 # ComfyUI-JoyCaption Update Log
 
+## V2.0.2 (2025-10-27)
+
+### 🧩 **New Feature: Custom Model Support**
+
+- Added `custom_models.json` system — users can now add their own models without modifying the core repository.
+- Supports both **Hugging Face** (`hf_models`) and **GGUF** (`gguf_models`) formats.
+- Fully optional — if the file is missing or empty, JoyCaption continues as normal.
+- Safe and mergeable — your custom definitions are loaded dynamically at runtime.
+- Includes example file: `custom_models_example.json`
+- Added detailed documentation: [📘 custom_models.md](./custom_models.md)
+
 ## V2.0.1 (2025-10-20)
 
 ### 🐛 Bug Fixes
@@ -157,6 +168,7 @@ https://github.com/1038lab/ComfyUI-JoyCaption/blob/main/example_workflows/JoyCap
   - UTF-8 encoding support
 
   - Batch processing capability
+
 
 
 
