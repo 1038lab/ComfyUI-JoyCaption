@@ -1,7 +1,7 @@
 [project]
 name = "ComfyUI-JoyCaption"
 description = "Joy Caption is a ComfyUI node using the LLaVA model to generate stylized image captions, supporting batch processing and GGUF models."
-version = "2.0.1"
+version = "2.0.2"
 license = {file = "LICENSE"}
 dependencies = [
     "torch>=2.0.0",
@@ -20,4 +20,5 @@ Repository = "https://github.com/1038lab/ComfyUI-JoyCaption"
 PublisherId = "ailab"
 DisplayName = "ComfyUI-JoyCaption"
 Icon = ""
+
 
