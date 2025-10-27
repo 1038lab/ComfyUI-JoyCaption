@@ -4,19 +4,6 @@
 
 ComfyUI 自定义节点，基于 LLaVA VLM 提供高级图像描述功能，支持自定义风格和内存优化推理。
 
-## 新闻与更新
-- **2025/08/22**: 更新 ComfyUI-JoyCaption 至 **v2.0.0** 版本 ( [update.md](https://github.com/1038lab/ComfyUI-JoyCaption/blob/main/update.md#v200-2025-08-22) )
-  - **增强GGUF支持**: 全面支持12种量化级别 (Q2_K到F16)
-  - **llama_cpp_install文件夹**: 完整的llama-cpp-python安装指南和自动化脚本
-  - **简化安装**: 一键安装llama-cpp-python，自动CUDA支持
-  - **跨平台支持**: Windows、macOS和Linux安装指南
-  - **性能改进**: 优化模型加载和内存管理
-
-- **2025/06/15**: 更新 ComfyUI-JoyCaption 至 **v1.2.0** 版本 ( [update.md](https://github.com/1038lab/ComfyUI-JoyCaption/blob/main/update.md#v120-20250615) )
-  - 增强 CUDA 性能优化
-  - 改进内存管理策略
-  - 添加全局缓存模式以提升处理速度
-
 ## 功能特点
 
 - 简单友好的用户界面
@@ -310,3 +297,4 @@ pip install -r requirements_gguf.txt
 
 
 模型采用 GPL-3.0 许可证发布。请参阅 [LICENSE](LICENSE) 文件了解详情。 
+
