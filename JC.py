@@ -41,6 +41,21 @@ with open(Path(__file__).parent / "jc_data.json", "r", encoding="utf-8") as f:
     CAPTION_LENGTH_CHOICES = config["caption_length_choices"]
     HF_MODELS = config["hf_models"]
 
+# --- Custom Models Merge Logic (for HF models only) ---
+custom_path = Path(__file__).parent / "custom_models.json"
+
+if custom_path.exists():
+    try:
+        with open(custom_path, "r", encoding="utf-8") as f:
+            custom_data = json.load(f) or {}
+        HF_MODELS.update(custom_data.get("hf_models", {}))
+        print("[JoyCaption] ✅ Loaded custom HF custom models.")
+    except Exception as e:
+        print(f"[JoyCaption] ⚠️ Failed to load custom models → {e}")
+else:
+    print("[JoyCaption] ℹ️ No custom models found, skipping user-defined HF models.")
+# ------------------------------------------------------
+
 def build_prompt(caption_type: str, caption_length: str | int, extra_options: list[str], name_input: str) -> str:
     """Constructs the prompt for the model based on user selections."""
     if caption_length == "any":

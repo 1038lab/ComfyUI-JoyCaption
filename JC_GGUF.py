@@ -52,6 +52,21 @@ with open(Path(__file__).parent / "jc_data.json", "r", encoding="utf-8") as f:
     GGUF_MODELS = config["gguf_models"]
     GGUF_SETTINGS = config["gguf_settings"]
 
+# --- Custom Models Merge Logic (for GGUF models only) ---
+custom_path = Path(__file__).parent / "custom_models.json"
+
+if custom_path.exists():
+    try:
+        with open(custom_path, "r", encoding="utf-8") as f:
+            custom_data = json.load(f) or {}
+        GGUF_MODELS.update(custom_data.get("gguf_models", {}))
+        print("[JoyCaption GGUF] ✅ Loaded custom GGUF custom models")
+    except Exception as e:
+        print(f"[JoyCaption GGUF] ⚠️ Failed to load custom models → {e}")
+else:
+    print("[JoyCaption GGUF] ℹ️ No custom models found, skipping user-defined GGUF models.")
+# -------------------------------------------------------
+
 _MODEL_CACHE = {}
 
 def build_prompt(caption_type: str, caption_length: str | int, extra_options: list[str], name_input: str) -> str:
