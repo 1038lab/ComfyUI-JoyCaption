@@ -9,7 +9,7 @@
 - Fully optional — if the file is missing or empty, JoyCaption continues as normal.
 - Safe and mergeable — your custom definitions are loaded dynamically at runtime.
 - Includes example file: `custom_models_example.json`
-- Added detailed documentation: [📘 custom_models.md](./custom_models.md)
+- Added detailed documentation: [📘 custom_models.md](./docs/custom_models.md)
 
 ## V2.0.1 (2025-10-20)
 
@@ -168,6 +168,7 @@ https://github.com/1038lab/ComfyUI-JoyCaption/blob/main/example_workflows/JoyCap
   - UTF-8 encoding support
 
   - Batch processing capability
+
 
 
 
