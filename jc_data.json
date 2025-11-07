@@ -247,7 +247,7 @@
     },
     "hf_models": {
         "joycaption-beta-one-fp8": {
-            "name": "JKCHSTR/llama-joycaption-alpha-two-hf-llava-FP8-Dynamic",
+            "name": "NeoChen1024/llama-joycaption-beta-one-hf-llava-FP8-Dynamic",
             "description": "JoyCaption Beta One - FP8 Dynamic Quantization of llama-joycaption-beta-one"
         },
         "joycaption-beta-one": {
@@ -323,3 +323,4 @@
     }
 
 } 
+
