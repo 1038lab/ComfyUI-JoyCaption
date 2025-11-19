@@ -14,7 +14,7 @@ This guide helps you install `llama-cpp-python` with GPU (CUDA) support for Comf
 ### **2. Install Build Tools (If you haven't already)**
 
 * **Install Visual Studio Build Tools:**
-    * Download from [https://visualstudio.microsoft.com/downloads/](https://visualstudio.microsoft.com/downloads/) (under "Tools for Visual Studio").
+    * Download Visual Studio Build Tools 2022 [https://visualstudio.microsoft.com/downloads/](https://visualstudio.microsoft.com/downloads/](https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-history#release-dates-and-build-numbers) (under 17.4 "Build Tools").
     * Run installer, select **"Desktop development with C++"** workload.
 * **Install NVIDIA CUDA Toolkit:**
     * Download your CUDA version (e.g., 12.6) from [https://developer.nvidia.com/cuda-toolkit-archive](https://developer.nvidia.com/cuda-toolkit-archive).
@@ -80,4 +80,5 @@ The script will:
 * Hard refresh your web browser (`Ctrl+F5` or `Cmd+Shift+R`).
 
 ---
+
 
